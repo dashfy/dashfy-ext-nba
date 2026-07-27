@@ -8,7 +8,7 @@ import {
   WidgetErrorBoundary,
   WidgetHeader,
   WidgetLoader,
-} from '@dashfy/ui'
+} from '@getdashfy/ui'
 
 import { BasketballIcon } from '@/components/common/Icons'
 import type { ScoreboardResponse } from '@/types'
@@ -44,41 +44,13 @@ export interface ScoreboardProps {
 }
 
 /**
- * Displays the scoreboard for the current day's games.
- *
- * @example
- * ```json
- * {
- *   "extension": "nba",
- *   "widget": "Scoreboard",
- *   "api": "nba",
- *   "endpoint": "games",
- *   "title": "NBA",
- *   "subject": "Scoreboard",
- *   "date": "2024-12-25"
- * }
- * ```
+ * Displays NBA games for a given day with live scores and status.
  *
  * @example
  * ```yaml
- * extension: nba
- * widget: Scoreboard
- * api: nba
- * endpoint: games
- * title: NBA
- * subject: Scoreboard
- * date: "2024-12-25"
- * ```
- *
- * @example
- * ```tsx
- * <Scoreboard
- *   api="nba"
- *   endpoint="games"
- *   title="NBA"
- *   subject="Scoreboard"
- *   date="2024-12-25"
- * />
+ * - extension: nba
+ *   widget: Scoreboard
+ *   date: "2024-12-25"
  * ```
  */
 export const Scoreboard = ({

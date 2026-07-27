@@ -7,7 +7,7 @@ import {
   WidgetErrorBoundary,
   WidgetHeader,
   WidgetLoader,
-} from '@dashfy/ui'
+} from '@getdashfy/ui'
 
 import { BasketballIcon } from '@/components/common/Icons'
 import type { ScoreboardResponse } from '@/types'
@@ -53,47 +53,13 @@ export interface GameCardProps {
 }
 
 /**
- * Displays a single NBA game with scores.
- *
- * @example
- * ```json
- * {
- *   "extension": "nba",
- *   "widget": "GameCard",
- *   "api": "nba",
- *   "endpoint": "games",
- *   "title": "NBA",
- *   "subject": "Game",
- *   "gameId": "0022400123",
- *   "gameIndex": 0,
- *   "date": "2024-12-25"
- * }
- * ```
+ * Displays a single NBA game with scores and team leaders.
  *
  * @example
  * ```yaml
- * extension: nba
- * widget: GameCard
- * api: nba
- * endpoint: games
- * title: NBA
- * subject: Game
- * gameId: "0022400123"
- * gameIndex: 0
- * date: "2024-12-25"
- * ```
- *
- * @example
- * ```tsx
- * <GameCard
- *   api="nba"
- *   endpoint="games"
- *   title="NBA"
- *   subject="Game"
- *   gameId="0022400123"
- *   gameIndex=0
- *   date="2024-12-25"
- * />
+ * - extension: nba
+ *   widget: GameCard
+ *   gameIndex: 0
  * ```
  */
 export const GameCard = ({

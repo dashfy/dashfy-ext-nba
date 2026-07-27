@@ -1,4 +1,4 @@
-import { generateReactKey, WidgetAvatar, WidgetEmpty, WidgetStatusChip } from '@dashfy/ui'
+import { generateReactKey, WidgetAvatar, WidgetEmpty, WidgetStatusChip } from '@getdashfy/ui'
 
 import type { NbaConference, NbaStanding } from '@/types'
 import {

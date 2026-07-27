@@ -1,7 +1,8 @@
-# Dashfy NBA Extension
+# `@getdashfy/ext-nba`
 
-[![npm version](https://img.shields.io/npm/v/@dashfy/ext-nba.svg?style=flat-square)](https://www.npmjs.com/package/@dashfy/ext-nba)
-[![License](https://img.shields.io/github/license/dashfy/dashfy.svg?style=flat-square)](https://github.com/dashfy/dashfy/blob/main/LICENSE)
+![Full README Row](https://shieldcn.dev/group/npm/@getdashfy/ext-nba+github/stars/dashfy/dashfy-ext-nba+github/ci/dashfy/dashfy-ext-nba+github/license/dashfy/dashfy-ext-nba.svg?variant=branded&size=xs)
+
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/dashfy?referralCode=INMsTa&utm_medium=integration&utm_source=template&utm_campaign=generic)
 
 > NBA extension for [Dashfy](https://github.com/dashfy/dashfy) - Live scores, standings, and game statistics.
 
@@ -11,51 +12,72 @@ This extension provides widgets to display NBA games, scores, standings, and rea
 
 - **🏀 Live scores**: Real-time game scores and updates
 - **📊 Standings**: Current season standings by conference
-- **🎮 Game cards**: Detailed single game view with team stats
+- **🎮 Game cards**: Detailed single game view with team leaders
 - **📅 Scoreboard**: Multiple games view for any date
-- **⏱️ Live updates**: Real-time game status and scores
 - **🏆 Conference filtering**: View East, West, or both conferences
-- **📈 Team leaders**: Top performers for each game
 - **⚡ Real-time updates**: Automatic data refresh via WebSocket subscriptions
 - **🎨 Theme support**: Works with all Dashfy themes (light/dark mode)
 
 ## Installation
 
+Install with your favorite package manager:
+
+#### `npm`
+
 ```bash
-npm install @dashfy/ext-nba
-# or
-pnpm add @dashfy/ext-nba
-# or
-yarn add @dashfy/ext-nba
+npm install @getdashfy/ext-nba
 ```
 
-## Quick Start
+#### `pnpm`
 
-### 1. Server Setup
+```bash
+pnpm add @getdashfy/ext-nba
+```
 
-Register the NBA API client in your Dashfy server:
+#### `yarn`
+
+```bash
+yarn add @getdashfy/ext-nba
+```
+
+#### `bun`
+
+```bash
+bun add @getdashfy/ext-nba
+```
+
+## Quick start
+
+### 1. Server setup
+
+Register the NBA API client in your Dashfy server (`dashfy.server.ts`):
 
 ```ts
-import { Dashfy } from '@dashfy/server'
-import { createNbaClient } from '@dashfy/ext-nba'
+import { Dashfy } from '@getdashfy/server'
+import { createNbaClient } from '@getdashfy/ext-nba/client'
 
+// Create a new Dashfy server instance
 const dashfy = new Dashfy()
+
+// Load dashboard configuration
+await dashfy.configureFromFile('./dashfy.config.yml')
 
 // Register NBA API
 dashfy.registerApi('nba', createNbaClient())
 
+// Start server
 await dashfy.start()
 ```
 
-### 2. Client Setup
+### 2. Client setup
 
-Register NBA widgets in your React application:
+Register NBA widgets in your React application (`App.tsx`):
 
 ```tsx
-import { WidgetRegistry } from '@dashfy/ui'
-import { GameCard, Scoreboard, Standings } from '@dashfy/ext-nba'
+import { WidgetRegistry } from '@getdashfy/ui'
+import { GameCard, Scoreboard, Standings } from '@getdashfy/ext-nba'
 
-// Register all NBA widgets
+// Register NBA extension
 WidgetRegistry.addExtension('nba', {
   GameCard,
   Scoreboard,
@@ -63,12 +85,11 @@ WidgetRegistry.addExtension('nba', {
 })
 ```
 
-### 3. Dashboard Configuration
+### 3. Dashboard configuration
 
-Add NBA widgets to your dashboard configuration:
+Add NBA widgets to your dashboard configuration (`dashfy.config.yml`):
 
 ```yaml
-# dashfy.config.yml
 dashboards:
   - title: NBA Dashboard
     columns: 3
@@ -76,7 +97,6 @@ dashboards:
     widgets:
       - extension: nba
         widget: Scoreboard
-        title: NBA
         subject: Today's Games
         x: 0
         y: 0
@@ -85,8 +105,6 @@ dashboards:
 
       - extension: nba
         widget: Standings
-        title: NBA
-        subject: Standings
         conference: both
         x: 2
         y: 0
@@ -94,9 +112,11 @@ dashboards:
         rows: 2
 ```
 
-## NBA Client Configuration
+## NBA client configuration
 
-### Configuration Options
+This extension uses a proxy server to avoid CORS issues and rate limiting from the NBA API. The default proxy is `https://proxy.boxscores.site`.
+
+#### Configuration options
 
 ```ts
 createNbaClient({
@@ -104,15 +124,11 @@ createNbaClient({
   baseUrl: 'https://proxy.boxscores.site', // default
 
   // Request timeout in milliseconds
-  timeout: 10000, // default
+  timeout: 10_000, // default
 })
 ```
 
-### API Proxy
-
-This extension uses a proxy server to avoid CORS issues and rate limiting from the NBA API. The default proxy is `https://proxy.boxscores.site`.
-
-If you want to use your own proxy, you can set the `baseUrl` option:
+To use your own proxy, set the `baseUrl`:
 
 ```ts
 createNbaClient({
@@ -120,7 +136,20 @@ createNbaClient({
 })
 ```
 
-## Available Widgets
+## API endpoints
+
+`createNbaClient` registers the endpoints below. Widgets subscribe to them through the `endpoint` parameter, and you can call any of them from your own custom widgets.
+
+| Endpoint         | Parameters             | Returns                                        |
+| ---------------- | ---------------------- | ---------------------------------------------- |
+| `games`          | `date`                 | Scoreboard for a given day (defaults to today) |
+| `boxScore`       | `gameId`               | Box score and player statistics for a game     |
+| `standings`      | `season`, `seasonType` | Conference standings for a season              |
+| `playoffBracket` | `season`               | Playoff bracket for a season                   |
+
+`boxScore` and `playoffBracket` have no built-in widget yet — they are available for custom widgets.
+
+## Available widgets
 
 ### `Scoreboard`
 
@@ -141,35 +170,27 @@ Display multiple NBA games for a specific date with live scores and status.
 ```yaml
 - extension: nba
   widget: Scoreboard
-  title: NBA
   subject: Today's Games
   columns: 2
   rows: 1
 ```
 
-**Example (Specific Date):**
+**Example (specific date):**
 
 ```yaml
 - extension: nba
   widget: Scoreboard
-  title: NBA
   subject: Christmas Games
   date: '2024-12-25'
   columns: 2
   rows: 1
 ```
 
-**Game Status Indicators:**
-
-- **Not Started**: Shows scheduled game time
-- **In Progress**: Shows current quarter and game clock
-- **Final**: Shows final score
-
----
+Game status indicators: scheduled games show the tip-off time, in-progress games show the quarter and clock, and finished games show the final score.
 
 ### `GameCard`
 
-Display a single NBA game with detailed information and team leaders.
+Display a single NBA game with detailed information and team leaders (points, rebounds, assists).
 
 **Parameters:**
 
@@ -183,52 +204,28 @@ Display a single NBA game with detailed information and team leaders.
 | `api`       | string | no       | "nba"   | API subscription ID                     |
 | `endpoint`  | string | no       | "games" | API endpoint to call                    |
 
-**Example (First Game of the Day):**
+A game can be selected two ways: by `gameId` for a specific game, or by `gameIndex` to pick by position (`0` = first game of the day).
+
+**Example (first game of the day):**
 
 ```yaml
 - extension: nba
   widget: GameCard
-  title: NBA
-  subject: Game 1
   gameIndex: 0
   columns: 1
   rows: 1
 ```
 
-**Example (Specific Game):**
+**Example (specific game):**
 
 ```yaml
 - extension: nba
   widget: GameCard
-  title: NBA
   subject: Lakers vs Warriors
   gameId: '0022400123'
   columns: 1
   rows: 1
 ```
-
-**Example (Specific Date):**
-
-```yaml
-- extension: nba
-  widget: GameCard
-  title: NBA
-  subject: Christmas Game
-  date: '2024-12-25'
-  gameIndex: 0
-  columns: 1
-  rows: 1
-```
-
-**Features:**
-
-- Team names and tricodes
-- Current scores
-- Game status (scheduled, live, final)
-- Team records (wins-losses)
-- Team leaders (points, rebounds, assists)
-
----
 
 ### `Standings`
 
@@ -246,24 +243,21 @@ Display NBA standings by conference with team records and statistics.
 | `api`        | string                     | no       | "nba"       | API subscription ID            |
 | `endpoint`   | string                     | no       | "standings" | API endpoint to call           |
 
-**Example (Both Conferences):**
+**Example (both conferences):**
 
 ```yaml
 - extension: nba
   widget: Standings
-  title: NBA
-  subject: Standings
   conference: both
   columns: 2
   rows: 2
 ```
 
-**Example (Eastern Conference Only):**
+**Example (Eastern Conference only):**
 
 ```yaml
 - extension: nba
   widget: Standings
-  title: NBA
   subject: Conference Standings
   conference: East
   limit: 10
@@ -271,294 +265,39 @@ Display NBA standings by conference with team records and statistics.
   rows: 2
 ```
 
-**Example (Specific Season):**
+## Formats
 
-```yaml
-- extension: nba
-  widget: Standings
-  title: NBA
-  subject: 2023-24 Standings
-  conference: both
-  season: '2023-24'
-  columns: 2
-  rows: 2
-```
-
-**Displayed Information:**
-
-- Team rank
-- Team name
-- Win-loss record
-- Conference record
-- Home/Away records
-- Last 10 games record
-- Current streak
-
----
-
-## Complete Examples
-
-### Example 1: Live Games Dashboard
-
-```yaml
-# dashfy.config.yml
-dashboards:
-  - title: NBA Live
-    columns: 3
-    rows: 2
-    widgets:
-      # Today's scoreboard
-      - extension: nba
-        widget: Scoreboard
-        title: NBA
-        subject: Today's Games
-        x: 0
-        y: 0
-        columns: 3
-        rows: 1
-
-      # Featured game
-      - extension: nba
-        widget: GameCard
-        title: NBA
-        subject: Featured Game
-        gameIndex: 0
-        x: 0
-        y: 1
-        columns: 1
-        rows: 1
-
-      # Standings
-      - extension: nba
-        widget: Standings
-        title: NBA
-        subject: Standings
-        conference: both
-        limit: 8
-        x: 1
-        y: 1
-        columns: 2
-        rows: 1
-```
-
-### Example 2: Conference-Focused Dashboard
-
-```yaml
-dashboards:
-  - title: Eastern Conference
-    columns: 2
-    rows: 2
-    widgets:
-      # Eastern Conference standings
-      - extension: nba
-        widget: Standings
-        title: NBA
-        subject: Conference Standings
-        conference: East
-        x: 0
-        y: 0
-        columns: 1
-        rows: 2
-
-      # Today's games
-      - extension: nba
-        widget: Scoreboard
-        title: NBA
-        subject: Today's Games
-        x: 1
-        y: 0
-        columns: 1
-        rows: 1
-
-      # Featured game
-      - extension: nba
-        widget: GameCard
-        title: NBA
-        subject: Game of the Day
-        gameIndex: 0
-        x: 1
-        y: 1
-        columns: 1
-        rows: 1
-```
-
-### Example 3: Historical Games Dashboard
-
-```yaml
-dashboards:
-  - title: NBA History
-    columns: 3
-    rows: 1
-    widgets:
-      # Christmas 2023 games
-      - extension: nba
-        widget: Scoreboard
-        title: NBA
-        subject: Christmas 2023
-        date: '2023-12-25'
-        x: 0
-        y: 0
-        columns: 1
-        rows: 1
-
-      # Opening night 2024
-      - extension: nba
-        widget: Scoreboard
-        title: NBA
-        subject: Opening Night 2024
-        date: '2024-10-22'
-        x: 1
-        y: 0
-        columns: 1
-        rows: 1
-
-      # 2023-24 final standings
-      - extension: nba
-        widget: Standings
-        title: NBA
-        subject: 2023-24 Final
-        season: '2023-24'
-        conference: both
-        x: 2
-        y: 0
-        columns: 1
-        rows: 1
-```
-
-### Example 4: TypeScript Configuration
-
-```ts
-import type { DashfyConfig } from '@dashfy/types'
-
-const config: DashfyConfig = {
-  dashboards: [
-    {
-      title: 'NBA Dashboard',
-      columns: 3,
-      rows: 2,
-      widgets: [
-        {
-          extension: 'nba',
-          widget: 'Scoreboard',
-          title: 'NBA',
-          subject: "Today's Games",
-          x: 0,
-          y: 0,
-          columns: 2,
-          rows: 1,
-        },
-        {
-          extension: 'nba',
-          widget: 'Standings',
-          title: 'NBA',
-          subject: 'Standings',
-          conference: 'both',
-          limit: 10,
-          x: 2,
-          y: 0,
-          columns: 1,
-          rows: 2,
-        },
-        {
-          extension: 'nba',
-          widget: 'GameCard',
-          title: 'NBA',
-          subject: 'Featured Game',
-          gameIndex: 0,
-          x: 0,
-          y: 1,
-          columns: 2,
-          rows: 1,
-        },
-      ],
-    },
-  ],
-}
-
-export default config
-```
-
-## Advanced Features
-
-### Real-Time Updates
-
-The NBA extension automatically refreshes data at regular intervals to provide live score updates. The refresh rate depends on your Dashfy server configuration.
-
-### Date Formatting
-
-Dates should be provided in `YYYY-MM-DD` format:
-
-```yaml
-date: "2024-12-25"  # Christmas Day 2024
-date: "2024-10-22"  # Opening Night 2024
-```
-
-### Season Formatting
-
-Seasons should be provided in `YYYY-YY` format:
-
-```yaml
-season: "2024-25"  # 2024-2025 season
-season: "2023-24"  # 2023-2024 season
-```
-
-### Conference Filtering
-
-The `Standings` widget supports three conference options:
-
-- `"East"` - Eastern Conference only
-- `"West"` - Western Conference only
-- `"both"` - Both conferences (default)
-
-### Game Selection
-
-The `GameCard` widget supports two ways to select a game:
-
-1. **By Game ID**: Use the `gameId` parameter for a specific game
-2. **By Index**: Use the `gameIndex` parameter to select by position (0 = first game, 1 = second game, etc.)
-
-## Data Sources
-
-This extension uses the official NBA API through a proxy server:
-
-- **Scoreboard**: Live game scores and status
-- **Standings**: Current season standings
-- **Game Details**: Box scores and player statistics
+- **Dates** use `YYYY-MM-DD` (e.g. `2024-12-25`) and default to today.
+- **Seasons** use `YYYY-YY` (e.g. `2024-25`) and default to the current season.
 
 ## Troubleshooting
 
 ### No games displayed
 
-**Solution:** Verify the date format is correct (YYYY-MM-DD) and that games were scheduled for that date.
+**Solution:** Verify the date format is correct (`YYYY-MM-DD`) and that games were scheduled for that date.
 
 ### Proxy connection errors
 
-**Solution:** The default proxy may be experiencing issues. Consider setting up your own proxy server or waiting for the service to recover.
+**Solution:** The default proxy may be experiencing issues. Consider setting up your own proxy server via `baseUrl`, or waiting for the service to recover.
 
 ### Standings not loading
 
-**Solution:** Ensure the season format is correct (YYYY-YY) and matches an actual NBA season.
+**Solution:** Ensure the season format is correct (`YYYY-YY`) and matches an actual NBA season.
 
 ### Game not found
 
-**Solution:** Verify the `gameId` is correct or use `gameIndex` instead to select by position.
+**Solution:** Verify the `gameId` is correct, or use `gameIndex` instead to select by position.
 
 ## Contributing
 
-Contributions are welcome! Please refer to the main [Dashfy contributing guide](https://github.com/dashfy/dashfy/blob/main/CONTRIBUTING.md).
+Contributions are welcome. For issues and pull requests related to the extension, use the [dashfy/dashfy-ext-nba](https://github.com/dashfy/dashfy-ext-nba) repository. Framework contributions belong in [dashfy/dashfy](https://github.com/dashfy/dashfy).
 
-## Related Packages
+## Community
 
-- [`@dashfy/server`](https://www.npmjs.com/package/@dashfy/server) - Dashfy server
-- [`@dashfy/ui`](https://www.npmjs.com/package/@dashfy/ui) - Dashfy UI components
-- [`@dashfy/types`](https://www.npmjs.com/package/@dashfy/types) - Dashfy TypeScript types
-- [`@dashfy/ext-github`](https://www.npmjs.com/package/@dashfy/ext-github) - GitHub extension
-- [`@dashfy/ext-json`](https://www.npmjs.com/package/@dashfy/ext-json) - JSON/REST API extension
+Join the community on [Dashfy's Discord server](https://dashfy.dev/discord) to discuss the project, ask questions, or get help.
+
+Join the conversation on X (Twitter) and follow [@dashfydev](https://x.com/dashfydev) for updates and announcements.
 
 ## License
 
-MIT © [Breno Polanski](https://github.com/brenopolanski)
-
----
-
-Part of the [Dashfy](https://github.com/dashfy/dashfy) project.
+This project is licensed under the AGPL-3.0 License - see the [LICENSE](./LICENSE) file for details.

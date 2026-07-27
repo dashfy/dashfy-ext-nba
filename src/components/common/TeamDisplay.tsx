@@ -1,4 +1,4 @@
-import { cn, WidgetAvatar, WidgetListItem } from '@dashfy/ui'
+import { cn, WidgetAvatar, WidgetListItem } from '@getdashfy/ui'
 
 import type { NbaTeam } from '@/types'
 import { getTeamLogoUrlById } from '@/utils'

@@ -1,4 +1,4 @@
-import { Card } from '@dashfy/ui'
+import { Card } from '@getdashfy/ui'
 
 import { GameStatus } from '@/components/common/GameStatus'
 import { TeamDisplay } from '@/components/common/TeamDisplay'

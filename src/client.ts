@@ -1,5 +1,5 @@
-import type { APIRegistration } from '@dashfy/types'
-import { getErrorMessage, stringifyValue } from '@dashfy/utils'
+import type { APIRegistration } from '@getdashfy/types'
+import { getErrorMessage, stringifyValue } from '@getdashfy/utils'
 
 import type {
   BoxScoreResponse,
@@ -39,8 +39,8 @@ export interface NbaClientConfig {
  *
  * @example
  * ```ts
- * import { Dashfy } from '@dashfy/server'
- * import { createNbaClient } from '@dashfy/ext-nba'
+ * import { Dashfy } from '@getdashfy/server'
+ * import { createNbaClient } from '@getdashfy/ext-nba'
  *
  * const dashfy = new Dashfy()
  * dashfy.registerApi('nba', createNbaClient())
@@ -52,7 +52,7 @@ export function createNbaClient(config: NbaClientConfig = {}): APIRegistration {
   return ({ logger, request }) => {
     if (!request) {
       throw new Error(
-        '@dashfy/ext-nba requires the request helper. Make sure you are using @dashfy/server',
+        '@getdashfy/ext-nba requires the request helper. Make sure you are using @getdashfy/server',
       )
     }
 

@@ -28,8 +28,8 @@ describe('createNbaClient', () => {
   it('should throw error when request helper is not provided', () => {
     const client = createNbaClient({})
     expect(() => {
-      client({ logger: mockLogger, request: undefined as never })
-    }).toThrow('@dashfy/ext-nba requires the request helper')
+      client({ logger: mockLogger, request: undefined })
+    }).toThrow('@getdashfy/ext-nba requires the request helper')
   })
 
   describe('games endpoint', () => {

@@ -1,4 +1,4 @@
-import { WidgetStatusChip } from '@dashfy/ui'
+import { WidgetStatusChip } from '@getdashfy/ui'
 
 import { formatGameTime, formatMinutes } from '@/utils'
 

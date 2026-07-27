@@ -1,4 +1,4 @@
-import { dateFns } from '@dashfy/utils'
+import { dateFns } from '@getdashfy/utils'
 
 import type { GameStatus, NbaConference, NbaGame } from './types'
 
@@ -78,6 +78,7 @@ export function formatDateForApi(date: string): string {
  * ```ts
  * formatGameTime('2024-01-01T00:00:00Z')
  * // => '12:00 AM'
+ * ```
  */
 export function formatGameTime(gameTimeUTC: string): string {
   const date = dateFns.parseISO(gameTimeUTC)
@@ -146,6 +147,7 @@ export function formatWinPercentage(record: string): string {
  * ```ts
  * getConferenceDisplayName('East')
  * // => 'Eastern Conference'
+ * ```
  */
 export function getConferenceDisplayName(conference: NbaConference): string {
   return conference === CONFERENCES.EAST.value ? CONFERENCES.EAST.display : CONFERENCES.WEST.display
@@ -186,6 +188,7 @@ export function getCurrentSeason(): string {
  * ```ts
  * getGameStatusText(1)
  * // => 'Scheduled'
+ * ```
  */
 export function getGameStatusText(status: GameStatus): string {
   switch (status) {

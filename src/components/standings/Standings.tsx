@@ -6,7 +6,7 @@ import {
   WidgetErrorBoundary,
   WidgetHeader,
   WidgetLoader,
-} from '@dashfy/ui'
+} from '@getdashfy/ui'
 import { TrophyIcon } from 'lucide-react'
 
 import type { NbaConferenceFilter, StandingsResponse } from '@/types'
@@ -53,47 +53,14 @@ export interface StandingsProps {
 }
 
 /**
- * Displays the standings for the NBA.
- *
- * @example
- * ```json
- * {
- *   "extension": "nba",
- *   "widget": "Standings",
- *   "api": "nba",
- *   "endpoint": "standings",
- *   "title": "NBA",
- *   "subject": "Standings",
- *   "conference": "both",
- *   "season": "2024-25",
- *   "limit": 15
- * }
- * ```
+ * Displays NBA standings by conference with team records.
  *
  * @example
  * ```yaml
- * extension: nba
- * widget: Standings
- * api: nba
- * endpoint: standings
- * title: NBA
- * subject: Standings
- * conference: both
- * season: "2024-25"
- * limit: 15
- * ```
- *
- * @example
- * ```tsx
- * <Standings
- *   api="nba"
- *   endpoint="standings"
- *   title="NBA"
- *   subject="Standings"
- *   conference="both"
- *   season="2024-25"
- *   limit={15}
- * />
+ * - extension: nba
+ *   widget: Standings
+ *   conference: both
+ *   limit: 15
  * ```
  */
 export const Standings = ({

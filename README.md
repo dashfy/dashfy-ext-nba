@@ -8,6 +8,8 @@
 
 This extension provides widgets to display NBA games, scores, standings, and real-time game updates.
 
+![Dashfy dashboard with NBA extension widgets](https://raw.githubusercontent.com/dashfy/dashfy-ext-nba/refs/heads/main/preview/dashfy-ext-nba.png)
+
 ## Features
 
 - **🏀 Live scores**: Real-time game scores and updates
